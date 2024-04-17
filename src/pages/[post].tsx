@@ -24,6 +24,7 @@ const Post = () => {
 			})
 	}, [id])
 
+
 	return (
 		<>
 			{data.title.length !== 0 && data.body.length !== 0 ? (

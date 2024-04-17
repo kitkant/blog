@@ -3,20 +3,27 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
+
 interface Props extends IPosts {
 	index: number
+	like: number
+	dislike: number
 }
 
-const Post = ({ id, userId, title, body, index }: Props) => {
+const Post = ({ id, userId, title, body, index, like, dislike}: Props) => {
 	useEffect(() => {
 		setIsClient(true)
 	}, [])
 
+
+
+	// createPost({ id: 123, title: 'Hello World' })
+
 	const [isClient, setIsClient] = useState(false)
-	const [like, setLike] = useState<number>(getRandomIntInclusive)
-	const [dislike, setDislike] = useState<number>(getRandomIntInclusive)
+
 	const [activeLike, setActiveLike] = useState<boolean>(false)
 	const [activeDislike, setActiveDislike] = useState<boolean>(false)
+
 
 	function getRandomIntInclusive(): number {
 		const minCeiled = Math.ceil(0)
@@ -24,30 +31,30 @@ const Post = ({ id, userId, title, body, index }: Props) => {
 		return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 	}
 
-	const likeChange = (): void => {
-		if (!activeLike) {
-			setActiveLike(true)
-			setLike(like + 1)
+	// const likeChange = (): void => {
+	// 	if (!activeLike) {
+	// 		setActiveLike(true)
+	// 		setLike(like + 1)
 			
-		}
+	// 	}
 
-		if (activeDislike) {
-			setActiveDislike(false)
-			setDislike(dislike - 1)
-		}
-	}
-	const dislikeChange = (): void => {
-		if (!activeDislike) {
-			setActiveDislike(true)
-			setDislike(dislike + 1)
+	// 	if (activeDislike) {
+	// 		setActiveDislike(false)
+	// 		setDislike(dislike - 1)
+	// 	}
+	// }
+	// const dislikeChange = (): void => {
+	// 	if (!activeDislike) {
+	// 		setActiveDislike(true)
+	// 		setDislike(dislike + 1)
 			
-		}
+	// 	}
 
-		if (activeLike) {
-			setActiveLike(false)
-			setLike(like - 1)
-		}
-	}
+	// 	if (activeLike) {
+	// 		setActiveLike(false)
+	// 		setLike(like - 1)
+	// 	}
+	// }
 
 	return (
 		<>
@@ -65,7 +72,7 @@ const Post = ({ id, userId, title, body, index }: Props) => {
 							{index === 0 ? (
 								<WrapperRating>
 									<ContainerRating>
-										<ButtonRating onClick={likeChange}>
+										<ButtonRating>
 											<Image
 												src={
 													activeLike
@@ -80,7 +87,7 @@ const Post = ({ id, userId, title, body, index }: Props) => {
 										<Rating>{like}</Rating>
 									</ContainerRating>
 									<ContainerRating>
-										<ButtonRating onClick={dislikeChange}>
+										<ButtonRating>
 											<Image
 												src={
 													activeDislike
@@ -110,7 +117,7 @@ const Post = ({ id, userId, title, body, index }: Props) => {
 							<WrapperBtn>
 								<WrapperRating>
 									<ContainerRating>
-										<ButtonRating onClick={likeChange}>
+										<ButtonRating>
 											<Image
 												src={
 													activeLike
@@ -125,7 +132,7 @@ const Post = ({ id, userId, title, body, index }: Props) => {
 										<Rating>{like}</Rating>
 									</ContainerRating>
 									<ContainerRating>
-										<ButtonRating onClick={dislikeChange}>
+										<ButtonRating>
 											<Image
 												src={
 													activeDislike
@@ -185,7 +192,6 @@ const ContainerRating = styled.div`
 	align-items: center;
 	gap: 10px;
 `
-
 const ButtonRating = styled.button`
 	border: none;
 	width: 32px;
@@ -201,7 +207,6 @@ const Rating = styled.div`
 const BodyWrapper = styled.p`
 	font-size: 24px;
 `
-
 const ButtonMore = styled.button`
 	border: 1px solid #0a0a0a;
 	border-radius: 60px;
@@ -217,7 +222,6 @@ const WrapperBtn = styled.div`
 	display: flex;
 	justify-content: space-between;
 `
-
 const WrapperFirstBtn = styled.div`
 	display: flex;
 	justify-content: end;

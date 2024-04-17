@@ -1,32 +1,58 @@
 import styled from '@emotion/styled'
-import React, { Fragment } from 'react'
-import Post from './components/Post'
+import { Fragment, useState } from 'react'
+import { useSelector } from 'react-redux'
 import Masonry from 'react-responsive-masonry'
+import Pagination from '../Pagination/Pagination'
+import Post from './components/Post'
+import { usePaginate } from '@/hook/usePaginate'
 
 interface Props {
-	posts: IPosts[]
+	data: null | IPosts[]
+	loading: boolean
+	error: null | string
 }
 
-const PostsCase = ({ posts }: Props) => {
+const PostsCase = ({posts, loading, error} : any) => {
+	// const { data, loading, error } = useSelector((state: any) => state.posts)
+	
+	
+	const [currentPage, setCurrentPage] = useState(1);
+ 	const pageSize = 9;
 
+	
+	const onPageChange = (page: number) => {
+		setCurrentPage(page);
+	};
+
+
+	const data = usePaginate(posts, currentPage, pageSize);
+	if (loading) {
+		return <div>Loading...</div>
+	}
+
+	if (error) {
+		return <div>Error: {error}</div>
+	}
 
 	return (
 		<>
-			{Object.keys(posts).length !== 0 ? (
+			{data ? (
 				<Wrapper>
 					{
 						<FirstPost>
 							<Post
-								id={posts[0].id}
-								userId={posts[0].userId}
-								title={posts[0].title}
-								body={posts[0].body}
+								id={data[0].id}
+								userId={data[0].userId}
+								title={data[0].title}
+								body={data[0].body}
 								index={0}
+								like={data[0].like}
+								dislike={data[0].dislike}
 							/>
 						</FirstPost>
 					}
 					<Masonry columnsCount={2} gutter={'24px'}>
-						{posts.map((post: IPosts, index: number) => {
+						{data.map((post: any, index: number) => {
 							if (index === 0) return
 							return (
 								<Fragment key={post.id}>
@@ -36,11 +62,19 @@ const PostsCase = ({ posts }: Props) => {
 										title={post.title}
 										body={post.body}
 										index={index}
+										like={post.like}
+										dislike={post.dislike}
 									/>
 								</Fragment>
 							)
 						})}
 					</Masonry>
+					<Pagination
+							items={posts.length} // 100
+							currentPage={currentPage} // 1
+							pageSize={pageSize} // 10
+							onPageChange={onPageChange}
+        />
 				</Wrapper>
 			) : (
 				<>

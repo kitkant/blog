@@ -10,7 +10,7 @@ interface Props {
 }
 
 const PostDetailCase = (data: Props) => {
-	console.log(data.data.title)
+
 	return (
 		<Wrapper>
 			<Title>{data.data.title}</Title>

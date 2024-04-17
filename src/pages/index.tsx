@@ -2,8 +2,13 @@ import InputCase from '@/features/InputCase/InputCase'
 import PostsCase from '@/features/PostsCase/PostsCase'
 import TitleCase from '@/features/TitleCase/TitleCase'
 import styled from '@emotion/styled'
-import { Roboto } from 'next/font/google'
 import type { GetStaticProps } from 'next'
+import { Roboto } from 'next/font/google'
+import { Provider, useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, store } from '../store/store'
+import { createPost, fetchUserData } from '@/slices/posts.slice'
+import { useEffect } from 'react'
+import Pagination from '@/features/Pagination/Pagination'
 
 interface Props {
 	posts: IPosts[]
@@ -14,22 +19,33 @@ const roboto = Roboto({
 	subsets: ['latin'],
 })
 
-export const getStaticProps = (async () => {
-	const res = await fetch('https://jsonplaceholder.typicode.com/posts')
-	const posts = await res.json()
-	return { props: { posts } }
-}) satisfies GetStaticProps<{
-	posts: IPosts[]
-}>
-export default function Home({ posts }: Props) {
+
+export default function Home() {
+
+	const dispatch = useDispatch<AppDispatch>();
+
+ 
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
+
+	const { data, loading, error } = useSelector((state: any) => state.posts)
 	return (
-		<Wrapper className={roboto.className}>
+		<>
+		{data ? 
+			<Wrapper className={roboto.className}>
 			<Container className='container'>
 				<TitleCase />
 				<InputCase />
-				<PostsCase posts={posts} />
+				<PostsCase posts={data} loading={loading} error={error} />
 			</Container>
 		</Wrapper>
+		:
+		<div>Loading</div>
+		}
+		</>
+		
+		
 	)
 }
 
